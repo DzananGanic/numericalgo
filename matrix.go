@@ -12,7 +12,6 @@ func (m Matrix) Dim() (int, int) {
 }
 
 // PRIORITY:
-// TODO: Multiplication
 // TODO: Inverse
 
 // OTHER METHODS:
@@ -22,6 +21,37 @@ func (m Matrix) Dim() (int, int) {
 // TODO: Determinant
 // TODO: Check for consistent dimensions
 // TODO: IsSingular
+
+func (m Matrix) MultiplyBy(m2 Matrix) (Matrix, error) {
+	var result Matrix
+
+	cols1, _ := m.Dim()
+	_, rows2 := m2.Dim()
+
+	if cols1 != rows2 {
+		return result, fmt.Errorf("The number of columns of the 1st matrix must equal the number of rows of the 2nd matrix")
+	}
+
+	for currentRowIndex := range m {
+		result = append(result, Vector{})
+		for currentColumnIndex := range m2[0] {
+			m2Col, err := m2.GetColumnAt(currentColumnIndex)
+
+			if err != nil {
+				return result, err
+			}
+
+			dot, err := m[currentRowIndex].Dot(m2Col)
+			if err != nil {
+				return result, err
+			}
+
+			result[currentRowIndex] = append(result[currentRowIndex], dot)
+		}
+	}
+
+	return result, nil
+}
 
 func (m Matrix) AddColumnAt(k int, c Vector) (Matrix, error) {
 	var result Matrix
