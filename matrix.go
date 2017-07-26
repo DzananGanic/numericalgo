@@ -93,6 +93,41 @@ func (m Matrix) Invert() (Matrix, error) {
 	return m, nil
 }
 
+func (m Matrix) LeftDivide(m2 Matrix) (Matrix, error) {
+	var result Matrix
+	mTransposed, err := m.Transpose()
+
+	if err != nil {
+		return result, err
+	}
+
+	mtm, err := mTransposed.MultiplyBy(m)
+
+	if err != nil {
+		return result, err
+	}
+
+	pseudoInverse, err := mtm.Invert()
+
+	if err != nil {
+		return result, err
+	}
+
+	pmt, err := pseudoInverse.MultiplyBy(mTransposed)
+
+	if err != nil {
+		return result, err
+	}
+
+	result, err = pmt.MultiplyBy(m2)
+
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
+}
+
 func (m Matrix) sumAbs() float64 {
 	var sum float64
 	rows, cols := m.Dim()

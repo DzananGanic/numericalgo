@@ -546,6 +546,77 @@ func TestMatrixMultiplication(t *testing.T) {
 	}
 }
 
+func TestMatrixLeftDivide(t *testing.T) {
+	cases := []struct {
+		matrix1        numericalgo.Matrix
+		matrix2        numericalgo.Matrix
+		expectedResult numericalgo.Matrix
+		expectedError  error
+	}{
+		// Basic
+		{
+			matrix1: numericalgo.Matrix{
+				{2},
+				{4},
+			},
+			matrix2: numericalgo.Matrix{
+				{4},
+				{4},
+			},
+			expectedResult: numericalgo.Matrix{
+				{1.2},
+			},
+			expectedError: nil,
+		},
+		{
+			matrix1: numericalgo.Matrix{
+				{1, 2},
+				{2, 2},
+			},
+			matrix2: numericalgo.Matrix{
+				{3, 2},
+				{1, 1},
+			},
+			expectedResult: numericalgo.Matrix{
+				{-2, -1},
+				{2.5, 1.5},
+			},
+			expectedError: nil,
+		},
+		{
+			matrix1: numericalgo.Matrix{
+				{1, 2},
+				{2, 2},
+			},
+			matrix2: numericalgo.Matrix{
+				{3, 2},
+			},
+			expectedResult: nil,
+			expectedError:  fmt.Errorf("The number of columns of the 1st matrix must equal the number of rows of the 2nd matrix"),
+		},
+		{
+			matrix1: numericalgo.Matrix{
+				{1, 2, 3},
+				{4, 5, 6},
+			},
+			matrix2: numericalgo.Matrix{
+				{1, 1},
+				{1, 1},
+				{1, 1},
+			},
+			expectedResult: nil,
+			expectedError:  fmt.Errorf("Matrix is singular"),
+		},
+	}
+
+	for _, c := range cases {
+		leftDivided, err := c.matrix1.LeftDivide(c.matrix2)
+		isSimilar := leftDivided.IsSimilar(c.expectedResult, 1e-4)
+		assert.Equal(t, true, isSimilar)
+		assert.Equal(t, err, c.expectedError)
+	}
+}
+
 func TestMatrixInverse(t *testing.T) {
 	cases := []struct {
 		matrix         numericalgo.Matrix
