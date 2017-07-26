@@ -545,3 +545,115 @@ func TestMatrixMultiplication(t *testing.T) {
 		assert.Equal(t, err, c.expectedError)
 	}
 }
+
+func TestMatrixInverse(t *testing.T) {
+	cases := []struct {
+		matrix         numericalgo.Matrix
+		expectedResult numericalgo.Matrix
+		expectedError  error
+	}{
+		{
+			matrix: numericalgo.Matrix{
+				{4, 7},
+				{2, 6},
+			},
+			expectedResult: numericalgo.Matrix{
+				{0.6, -0.7},
+				{-0.2, 0.4},
+			},
+			expectedError: nil,
+		},
+		{
+			matrix: numericalgo.Matrix{
+				{4, 7},
+			},
+			expectedResult: nil,
+			expectedError:  fmt.Errorf("Cannot invert non-square Matrix"),
+		},
+		{
+			matrix: numericalgo.Matrix{
+				{2, 4},
+				{6, 12},
+			},
+			expectedResult: nil,
+			expectedError:  fmt.Errorf("Matrix is singular"),
+		},
+		{
+			matrix: numericalgo.Matrix{
+				{3, 0, 2},
+				{2, 0, -2},
+				{0, 1, 1},
+			},
+			expectedResult: numericalgo.Matrix{
+				{0.2, 0.2, 0},
+				{-0.2, 0.3, 1},
+				{0.2, -0.3, 0},
+			},
+			expectedError: nil,
+		},
+	}
+
+	for _, c := range cases {
+		inverted, err := c.matrix.Invert()
+		isSimilar := inverted.IsSimilar(c.expectedResult, 1e-10)
+		assert.Equal(t, true, isSimilar)
+		assert.Equal(t, err, c.expectedError)
+	}
+}
+func TestMatrixIsSimilar(t *testing.T) {
+	cases := []struct {
+		matrix1        numericalgo.Matrix
+		matrix2        numericalgo.Matrix
+		expectedResult bool
+	}{
+		// Basic
+		{
+			matrix1: numericalgo.Matrix{
+				{1, 2},
+				{3, 4},
+			},
+			matrix2: numericalgo.Matrix{
+				{1.000000001, 2.0000000001},
+				{3, 4},
+			},
+			expectedResult: true,
+		},
+		// Wrong Dimensions
+		{
+			matrix1: numericalgo.Matrix{
+				{1, 2},
+			},
+			matrix2: numericalgo.Matrix{
+				{1, 2},
+				{3, 4},
+			},
+			expectedResult: false,
+		},
+		// Wrong values
+		{
+			matrix1: numericalgo.Matrix{
+				{1.2, 2.5},
+				{3.2, 5.4},
+			},
+			matrix2: numericalgo.Matrix{
+				{1, 2},
+				{3, 4},
+			},
+			expectedResult: false,
+		},
+		// Nil passed
+		{
+			matrix1: numericalgo.Matrix{
+				{1, 2},
+				{3, 5},
+			},
+			matrix2:        nil,
+			expectedResult: false,
+		},
+	}
+
+	for _, c := range cases {
+		isSimilar := c.matrix1.IsSimilar(c.matrix2, 0.1)
+		assert.Equal(t, c.expectedResult, isSimilar)
+	}
+}

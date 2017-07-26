@@ -1,6 +1,7 @@
 package numericalgo
 
 import "fmt"
+import "math"
 
 type Matrix []Vector
 
@@ -11,9 +12,6 @@ func (m Matrix) Dim() (int, int) {
 	return len(m[0]), len(m)
 }
 
-// PRIORITY:
-// TODO: Inverse
-
 // OTHER METHODS:
 // TODO: AddRowAt
 // TODO: RemoveRowAt
@@ -21,6 +19,95 @@ func (m Matrix) Dim() (int, int) {
 // TODO: Determinant
 // TODO: Check for consistent dimensions
 // TODO: IsSingular
+
+// Invert returns the inverted matrix by using Gauss-Jordan elimination
+func (m Matrix) Invert() (Matrix, error) {
+
+	if !m.isSquare() {
+		return nil, fmt.Errorf("Cannot invert non-square Matrix")
+	}
+
+	var rows, _ = m.Dim()
+
+	vec := make(Vector, rows)
+
+	// 1. Reduction to identity form
+	for currentRow := 1; currentRow <= rows; currentRow++ {
+
+		// Pivoting
+		pivot := currentRow
+		for i := currentRow + 1; i <= rows; i++ {
+			if math.Abs(m[i-1][currentRow-1]) > math.Abs(m[pivot-1][currentRow-1]) {
+				pivot = i
+			}
+		}
+
+		// If there exists no element a(k,i) different from zero, matrix is singular and has none or more than one solution
+		if math.Abs(m[pivot-1][currentRow-1]) < 1e-10 {
+			return nil, fmt.Errorf("Matrix is singular")
+		}
+
+		// If we find pivot which is the largest a(i, currentRow), we swap the rows
+		if pivot != currentRow {
+			tmp := m[currentRow-1]
+			m[currentRow-1] = m[pivot-1]
+			m[pivot-1] = tmp
+		}
+
+		vec[currentRow-1] = float64(pivot)
+
+		mi := m[currentRow-1][currentRow-1]
+		m[currentRow-1][currentRow-1] = 1.0
+
+		// Dividing by mi
+		divided, err := m[currentRow-1].DivideByScalar(mi)
+
+		if err != nil {
+			return nil, err
+		}
+
+		m[currentRow-1] = divided
+
+		for i := 1; i <= rows; i++ {
+			if i != currentRow {
+				mi = m[i-1][currentRow-1]
+				m[i-1][currentRow-1] = 0.0
+				for j := 1; j <= rows; j++ {
+					m[i-1][j-1] -= mi * m[currentRow-1][j-1]
+				}
+			}
+		}
+	}
+
+	// Reverse swapping
+	for j := rows; j >= 1; j-- {
+		pivot := vec[j-1]
+		if pivot != float64(j) {
+			for i := 1; i <= rows; i++ {
+				tmp := m[i-1][int64(pivot)-1]
+				m[i-1][int64(pivot)-1] = m[i-1][j-1]
+				m[i-1][j-1] = tmp
+			}
+		}
+	}
+	return m, nil
+}
+
+func (m Matrix) sumAbs() float64 {
+	var sum float64
+	rows, cols := m.Dim()
+	for i := 0; i < rows; i++ {
+		for j := 0; j < cols; j++ {
+			sum += math.Abs(m[i][j])
+		}
+	}
+	return sum
+}
+
+func (m Matrix) isSquare() bool {
+	rows, cols := m.Dim()
+	return rows == cols
+}
 
 func (m Matrix) MultiplyBy(m2 Matrix) (Matrix, error) {
 	var result Matrix
@@ -108,6 +195,26 @@ func (m Matrix) Transpose() (Matrix, error) {
 	}
 
 	return transposed, nil
+}
+
+func (m Matrix) IsSimilar(m2 Matrix, tolerance float64) bool {
+	if m.IsEqual(m2) {
+		return true
+	}
+
+	if !m.areDimsEqual(m2) {
+		return false
+	}
+
+	for column := range m {
+		for row := range m[column] {
+			if math.Abs(m[column][row]-m2[column][row]) > tolerance {
+				return false
+			}
+		}
+	}
+
+	return true
 }
 
 func (m Matrix) IsEqual(m2 Matrix) bool {
