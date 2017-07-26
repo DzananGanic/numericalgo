@@ -108,7 +108,6 @@ func (m Matrix) LeftDivide(m2 Matrix) (Matrix, error) {
 	}
 
 	pseudoInverse, err := mtm.Invert()
-
 	if err != nil {
 		return result, err
 	}

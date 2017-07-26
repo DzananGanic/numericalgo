@@ -607,10 +607,63 @@ func TestMatrixLeftDivide(t *testing.T) {
 			expectedResult: nil,
 			expectedError:  fmt.Errorf("Matrix is singular"),
 		},
+		{
+			matrix1: numericalgo.Matrix{
+				{1, 1.3},
+				{1, 2.1},
+				{1, 3.7},
+				{1, 4.2},
+			},
+			matrix2: numericalgo.Matrix{
+				{2.2},
+				{5.8},
+				{10.2},
+				{11.8},
+			},
+			expectedResult: numericalgo.Matrix{
+				{-1.5225601452564645},
+				{3.1938266000907847},
+			},
+			expectedError: nil,
+		},
+		{
+			matrix1: numericalgo.Matrix{
+				{1, 0.3},
+				{1, 0.8},
+				{1, 1.2},
+				{1, 1.7},
+				{1, 2.4},
+				{1, 3.1},
+				{1, 3.8},
+				{1, 4.5},
+				{1, 5.1},
+				{1, 5.8},
+				{1, 6.5},
+			},
+			matrix2: numericalgo.Matrix{
+				{8.61},
+				{7.94},
+				{7.55},
+				{6.85},
+				{6.11},
+				{5.17},
+				{4.19},
+				{3.41},
+				{2.63},
+				{1.77},
+				{0.89},
+			},
+			expectedResult: numericalgo.Matrix{
+				{8.99987709451432},
+				{-1.246552501126634},
+			},
+			expectedError: nil,
+		},
 	}
 
 	for _, c := range cases {
 		leftDivided, err := c.matrix1.LeftDivide(c.matrix2)
+
 		isSimilar := leftDivided.IsSimilar(c.expectedResult, 1e-4)
 		assert.Equal(t, true, isSimilar)
 		assert.Equal(t, err, c.expectedError)
