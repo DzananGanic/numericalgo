@@ -3,22 +3,16 @@ package numericalgo
 import "fmt"
 import "math"
 
+// Matrix type is the slice of Vectors, with custom methods needed for matrix operations.
 type Matrix []Vector
 
+// Dim returns the dimensions of the matrix in the form (rows, columns).
 func (m Matrix) Dim() (int, int) {
 	if m.isNil() {
 		return 0, 0
 	}
-	return len(m[0]), len(m)
+	return len(m), len(m[0])
 }
-
-// OTHER METHODS:
-// TODO: AddRowAt
-// TODO: RemoveRowAt
-// TODO: RemoveColumnAt
-// TODO: Determinant
-// TODO: Check for consistent dimensions
-// TODO: IsSingular
 
 // Invert returns the inverted matrix by using Gauss-Jordan elimination
 func (m Matrix) Invert() (Matrix, error) {
@@ -93,6 +87,27 @@ func (m Matrix) Invert() (Matrix, error) {
 	return m, nil
 }
 
+// Log applies natural logarithm to all the elements of the matrix, and returns the resulting matrix.
+func (m Matrix) Log() Matrix {
+	for i := range m {
+		for j := range m[i] {
+			m[i][j] = math.Log(m[i][j])
+		}
+	}
+	return m
+}
+
+// Log applies e^x to all the elements of the matrix, and returns the resulting matrix.
+func (m Matrix) Exp() Matrix {
+	for i := range m {
+		for j := range m[i] {
+			m[i][j] = math.Exp(m[i][j])
+		}
+	}
+	return m
+}
+
+// LeftDivide receives another matrix as a parameter. The method solves the symbolic system of linear equations in matrix form, A*X = B for X. It returns the results in matrix form and error (if there is any).
 func (m Matrix) LeftDivide(m2 Matrix) (Matrix, error) {
 	var result Matrix
 	mTransposed, err := m.Transpose()
@@ -143,11 +158,12 @@ func (m Matrix) isSquare() bool {
 	return rows == cols
 }
 
+// MultiplyBy receives another matrix as a parameter. It multiplies the matrices and returns the resulting matrix and error.
 func (m Matrix) MultiplyBy(m2 Matrix) (Matrix, error) {
 	var result Matrix
 
-	cols1, _ := m.Dim()
-	_, rows2 := m2.Dim()
+	_, cols1 := m.Dim()
+	rows2, _ := m2.Dim()
 
 	if cols1 != rows2 {
 		return result, fmt.Errorf("The number of columns of the 1st matrix must equal the number of rows of the 2nd matrix")
@@ -174,12 +190,13 @@ func (m Matrix) MultiplyBy(m2 Matrix) (Matrix, error) {
 	return result, nil
 }
 
+// AddColumnAt receives the index and the vector. It adds the provided vector as a column at index k, and returns the resulting matrix and the error (if there is any).
 func (m Matrix) AddColumnAt(k int, c Vector) (Matrix, error) {
 	var result Matrix
 
 	if k < 0 {
 		return result, fmt.Errorf("Index cannot be less than 0")
-	} else if width, _ := m.Dim(); k > width {
+	} else if _, width := m.Dim(); k > width {
 		return result, fmt.Errorf("Index cannot be greater than number of columns + 1")
 	} else if len(c) != len(m) {
 		return result, fmt.Errorf("Column dimensions must match")
@@ -190,9 +207,11 @@ func (m Matrix) AddColumnAt(k int, c Vector) (Matrix, error) {
 		expandedRow := append(row[:k], append(Vector{c[i]}, row[k:]...)...)
 		result = append(result, expandedRow)
 	}
+
 	return result, nil
 }
 
+// GetRowAt receives the index as a parameter. It returns the vector row at provided index and the error (if there is any).
 func (m Matrix) GetRowAt(i int) (Vector, error) {
 	if i < 0 {
 		return nil, fmt.Errorf("Index cannot be negative")
@@ -202,6 +221,7 @@ func (m Matrix) GetRowAt(i int) (Vector, error) {
 	return m[i], nil
 }
 
+// GetColumnAt receives the index as a parameter. It returns the vector column at provided index and the error (if there is any).
 func (m Matrix) GetColumnAt(i int) (Vector, error) {
 	var result Vector
 
@@ -214,9 +234,11 @@ func (m Matrix) GetColumnAt(i int) (Vector, error) {
 	for row := range m {
 		result = append(result, m[row][i])
 	}
+
 	return result, nil
 }
 
+// Transpose returns the transposed matrix and the error.
 func (m Matrix) Transpose() (Matrix, error) {
 	var transposed Matrix
 
@@ -231,7 +253,9 @@ func (m Matrix) Transpose() (Matrix, error) {
 	return transposed, nil
 }
 
+// IsSimilar receives another matrix and tolerance as the parameters. It checks whether the two matrices are similar within the provided tolerance.
 func (m Matrix) IsSimilar(m2 Matrix, tolerance float64) bool {
+
 	if m.IsEqual(m2) {
 		return true
 	}
@@ -251,6 +275,7 @@ func (m Matrix) IsSimilar(m2 Matrix, tolerance float64) bool {
 	return true
 }
 
+// IsEqual receives another matrix as a parameter. It returns true if the values of the two matrices are equal, and false otherwise.
 func (m Matrix) IsEqual(m2 Matrix) bool {
 	if m == nil && m2 == nil {
 		return true
@@ -270,9 +295,10 @@ func (m Matrix) IsEqual(m2 Matrix) bool {
 	return true
 }
 
+// Add receives another matrix as a parameter. It adds the two matrices and returns the result matrix and the error (if there is any).
 func (m Matrix) Add(m2 Matrix) (Matrix, error) {
-	width, height := m.Dim()
-	var result = make(Matrix, width, height)
+	rows, cols := m.Dim()
+	var result = make(Matrix, rows, cols)
 	if ok, err := m.canPerformOperationsWith(m2); !ok {
 		return nil, err
 	}
@@ -286,9 +312,10 @@ func (m Matrix) Add(m2 Matrix) (Matrix, error) {
 	return result, nil
 }
 
+// Subtract receives another matrix as a parameter. It subtracts the two matrices and returns the result matrix and the error (if there is any).
 func (m Matrix) Subtract(m2 Matrix) (Matrix, error) {
-	width, height := m.Dim()
-	var result = make(Matrix, width, height)
+	rows, cols := m.Dim()
+	var result = make(Matrix, rows, cols)
 	if ok, err := m.canPerformOperationsWith(m2); !ok {
 		return nil, err
 	}
@@ -327,3 +354,11 @@ func (m Matrix) canPerformOperationsWith(m2 Matrix) (bool, error) {
 	}
 	return true, nil
 }
+
+// OTHER CONVENIENT METHODS THAT CAN BE IMPLEMENTED:
+// TODO: AddRowAt
+// TODO: RemoveRowAt
+// TODO: RemoveColumnAt
+// TODO: Determinant
+// TODO: Check for consistent dimensions
+// TODO: IsSingular

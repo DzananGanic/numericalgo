@@ -4,9 +4,10 @@ import (
 	"github.com/DzananGanic/numericalgo"
 )
 
+// Base is a basic struct type on which other fit types are built on. It has x, y and coeff vectors as properties, as well as methods for getting them.
 type Base struct {
-	x     []float64
-	y     []float64
+	x     numericalgo.Vector
+	y     numericalgo.Vector
 	coeff numericalgo.Vector
 }
 
@@ -20,6 +21,7 @@ func (b *Base) Y() []float64 {
 	return b.y
 }
 
-func (b *Base) Coef() numericalgo.Vector {
+// Coeff returns the slice of the fit coefficients
+func (b *Base) Coeff() numericalgo.Vector {
 	return b.coeff
 }

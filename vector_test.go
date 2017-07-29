@@ -41,7 +41,7 @@ func TestVectorDim(t *testing.T) {
 
 }
 
-func TestVectorIsDimEqual(t *testing.T) {
+func TestVectorAreDimsEqual(t *testing.T) {
 	cases := []struct {
 		vector1        numericalgo.Vector
 		vector2        numericalgo.Vector
@@ -65,7 +65,7 @@ func TestVectorIsDimEqual(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		assert.Equal(t, c.expectedResult, c.vector1.IsDimEqual(c.vector2))
+		assert.Equal(t, c.expectedResult, c.vector1.AreDimsEqual(c.vector2))
 	}
 
 }

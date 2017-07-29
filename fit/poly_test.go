@@ -29,7 +29,7 @@ func TestFitPolyFit(t *testing.T) {
 	for _, c := range cases {
 		pf := fit.NewPoly()
 		err := pf.Fit(c.x, c.y, c.n)
-		r := pf.Coef().IsSimilar(c.coef, 1e-4)
+		r := pf.Coeff().IsSimilar(c.coef, 1e-4)
 		assert.Equal(t, true, r)
 		assert.Equal(t, c.expectedError, err)
 	}
