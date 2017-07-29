@@ -1,10 +1,13 @@
 package fit
 
+import (
+	"github.com/DzananGanic/numericalgo"
+)
+
 type Base struct {
-	x []float64
-	y []float64
-	p float64
-	q float64
+	x     []float64
+	y     []float64
+	coeff numericalgo.Vector
 }
 
 // X returns the slice of the fitted X coordinates
@@ -17,10 +20,6 @@ func (b *Base) Y() []float64 {
 	return b.y
 }
 
-func (b *Base) Coef() (float64, float64) {
-	return b.p, b.q
-}
-
-func (b *Base) Predict(val float64) float64 {
-	return b.p*val + b.q
+func (b *Base) Coef() numericalgo.Vector {
+	return b.coeff
 }

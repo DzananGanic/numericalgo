@@ -8,11 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateLinearFit(t *testing.T) {
-	lf := fit.NewLinear()
-	_ = lf
-}
-
 func TestFitLinearFit(t *testing.T) {
 	cases := []struct {
 		x             numericalgo.Vector
@@ -34,9 +29,9 @@ func TestFitLinearFit(t *testing.T) {
 	for _, c := range cases {
 		lf := fit.NewLinear()
 		err := lf.Fit(c.x, c.y)
-		p, q := lf.Coef()
-		assert.InEpsilon(t, p, c.p, 1e-10)
-		assert.InEpsilon(t, q, c.q, 1e-10)
+		coef := lf.Coef()
+		assert.InEpsilon(t, coef[0], c.p, 1e-10)
+		assert.InEpsilon(t, coef[1], c.q, 1e-10)
 		assert.Equal(t, c.expectedError, err)
 	}
 }

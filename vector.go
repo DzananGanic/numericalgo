@@ -2,6 +2,7 @@ package numericalgo
 
 import (
 	"fmt"
+	"math"
 )
 
 type Vector []float64
@@ -12,6 +13,30 @@ func (v Vector) Dim() int {
 
 func (v Vector) IsDimEqual(v2 Vector) bool {
 	return v.Dim() == v2.Dim()
+}
+
+func (v Vector) IsSimilar(v2 Vector, tolerance float64) bool {
+	if !v.IsDimEqual(v2) {
+		return false
+	}
+
+	for i := range v {
+		if math.Abs(v[i]-v2[i]) > tolerance {
+			return false
+		}
+	}
+
+	return true
+}
+
+func (v Vector) Power(n float64) Vector {
+	var result Vector
+
+	for _, val := range v {
+		result = append(result, math.Pow(val, n))
+	}
+
+	return result
 }
 
 func (v Vector) Add(v2 Vector) (Vector, error) {

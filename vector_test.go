@@ -213,3 +213,51 @@ func TestDivideVectorByScalar(t *testing.T) {
 	}
 
 }
+
+func TestVectorPower(t *testing.T) {
+	cases := []struct {
+		vector         numericalgo.Vector
+		power          float64
+		expectedResult numericalgo.Vector
+	}{
+		{
+			vector:         numericalgo.Vector{1, 2, 3},
+			power:          2,
+			expectedResult: numericalgo.Vector{1, 4, 9},
+		},
+	}
+
+	for _, c := range cases {
+		result := c.vector.Power(c.power)
+		assert.Equal(t, c.expectedResult, result)
+	}
+
+}
+
+func TestVectorIsSimilar(t *testing.T) {
+	cases := []struct {
+		vector1        numericalgo.Vector
+		vector2        numericalgo.Vector
+		tolerance      float64
+		expectedResult bool
+	}{
+		{
+			vector1:        numericalgo.Vector{1.2, 2.5},
+			vector2:        numericalgo.Vector{1, 2},
+			tolerance:      0.01,
+			expectedResult: false,
+		},
+		{
+			vector1:        numericalgo.Vector{1.000000001, 2.0000000001},
+			vector2:        numericalgo.Vector{1, 2},
+			tolerance:      0.1,
+			expectedResult: true,
+		},
+	}
+
+	for _, c := range cases {
+		result := c.vector1.IsSimilar(c.vector2, c.tolerance)
+		assert.Equal(t, c.expectedResult, result)
+	}
+
+}

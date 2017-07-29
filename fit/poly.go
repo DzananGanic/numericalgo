@@ -1,19 +1,21 @@
 package fit
 
 import (
+	"math"
+
 	"github.com/DzananGanic/numericalgo"
 )
 
-type Linear struct {
+type Poly struct {
 	Base
 }
 
-func NewLinear() *Linear {
-	lf := &Linear{}
-	return lf
+func NewPoly() *Poly {
+	pf := &Poly{}
+	return pf
 }
 
-func (l *Linear) Fit(x numericalgo.Vector, y numericalgo.Vector) error {
+func (p *Poly) Fit(x numericalgo.Vector, y numericalgo.Vector, n int) error {
 	xMatrix := numericalgo.Matrix{x}
 	yMatrix := numericalgo.Matrix{y}
 
@@ -34,6 +36,10 @@ func (l *Linear) Fit(x numericalgo.Vector, y numericalgo.Vector) error {
 		return err
 	}
 
+	for i := 2; i <= n; i++ {
+		X, err = X.AddColumnAt(i, x.Power(float64(i)))
+	}
+
 	Y, err := yMatrix.Transpose()
 
 	if err != nil {
@@ -46,8 +52,7 @@ func (l *Linear) Fit(x numericalgo.Vector, y numericalgo.Vector) error {
 		return err
 	}
 
-	//l.coeff = numericalgo.Vector{coeff[1][0], coeff[0][0]}
-	l.coeff, err = coeff.GetColumnAt(0)
+	p.coeff, err = coeff.GetColumnAt(0)
 
 	if err != nil {
 		return err
@@ -56,7 +61,11 @@ func (l *Linear) Fit(x numericalgo.Vector, y numericalgo.Vector) error {
 	return nil
 }
 
-func (l *Linear) Predict(val float64) float64 {
-	c := l.Coef()
-	return c[1]*val + c[0]
+func (p *Poly) Predict(val float64) float64 {
+	var result float64
+	c := p.Coef()
+	for i := len(c) - 1; i >= 0; i-- {
+		result += c[i] * math.Pow(val, float64(i))
+	}
+	return result
 }
