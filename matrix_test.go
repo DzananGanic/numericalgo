@@ -8,26 +8,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateMatrix(t *testing.T) {
-	// Creating empty matrix
-	_ = make(numericalgo.Matrix, 2, 2)
-
-	// With predefined values
-	_ = numericalgo.Matrix{
-		{1, 2},
-		{3, 4},
-	}
-}
-
 func TestCompareMatrices(t *testing.T) {
 
-	cases := []struct {
+	cases := map[string]struct {
 		matrix1 numericalgo.Matrix
 		matrix2 numericalgo.Matrix
 		isEqual bool
 	}{
-		// Basic
-		{
+		"basic matrix comparison": {
 			matrix1: numericalgo.Matrix{
 				{1, 2},
 				{3, 4},
@@ -38,8 +26,7 @@ func TestCompareMatrices(t *testing.T) {
 			},
 			isEqual: true,
 		},
-		// Wrong Dimensions
-		{
+		"wrong dimensions matrix comparison": {
 			matrix1: numericalgo.Matrix{
 				{1, 2},
 			},
@@ -49,8 +36,7 @@ func TestCompareMatrices(t *testing.T) {
 			},
 			isEqual: false,
 		},
-		// Wrong values
-		{
+		"different matrices comparison": {
 			matrix1: numericalgo.Matrix{
 				{1, 2},
 				{3, 5},
@@ -61,8 +47,7 @@ func TestCompareMatrices(t *testing.T) {
 			},
 			isEqual: false,
 		},
-		// Nil passed
-		{
+		"comparing matrix to nil": {
 			matrix1: numericalgo.Matrix{
 				{1, 2},
 				{3, 5},
@@ -72,21 +57,23 @@ func TestCompareMatrices(t *testing.T) {
 		},
 	}
 
-	for _, c := range cases {
-		isEqual := c.matrix1.IsEqual(c.matrix2)
-		assert.Equal(t, c.isEqual, isEqual)
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			isEqual := c.matrix1.IsEqual(c.matrix2)
+			assert.Equal(t, c.isEqual, isEqual)
+		})
 	}
 }
 
 func TestMatrixAddColumnAt(t *testing.T) {
-	cases := []struct {
+	cases := map[string]struct {
 		matrix         numericalgo.Matrix
 		column         numericalgo.Vector
 		index          int
 		expectedResult numericalgo.Matrix
 		expectedError  error
 	}{
-		{
+		"adding column at 0th index": {
 			matrix: numericalgo.Matrix{
 				{1, 2},
 				{3, 4},
@@ -99,7 +86,7 @@ func TestMatrixAddColumnAt(t *testing.T) {
 			},
 			expectedError: nil,
 		},
-		{
+		"adding column at 1st index": {
 			matrix: numericalgo.Matrix{
 				{1, 2},
 				{3, 4},
@@ -112,7 +99,7 @@ func TestMatrixAddColumnAt(t *testing.T) {
 			},
 			expectedError: nil,
 		},
-		{
+		"adding column at 2nd index": {
 			matrix: numericalgo.Matrix{
 				{1, 2},
 				{3, 4},
@@ -125,7 +112,7 @@ func TestMatrixAddColumnAt(t *testing.T) {
 			},
 			expectedError: nil,
 		},
-		{
+		"adding column with wrong dimensions": {
 			matrix: numericalgo.Matrix{
 				{1, 2},
 				{3, 4},
@@ -135,7 +122,7 @@ func TestMatrixAddColumnAt(t *testing.T) {
 			expectedResult: nil,
 			expectedError:  fmt.Errorf("Column dimensions must match"),
 		},
-		{
+		"adding column at incorrect index": {
 			matrix: numericalgo.Matrix{
 				{1, 2},
 				{3, 4},
@@ -145,7 +132,7 @@ func TestMatrixAddColumnAt(t *testing.T) {
 			expectedResult: nil,
 			expectedError:  fmt.Errorf("Index cannot be less than 0"),
 		},
-		{
+		"adding column at index which is too large": {
 			matrix: numericalgo.Matrix{
 				{1, 2},
 				{3, 4},
@@ -157,22 +144,23 @@ func TestMatrixAddColumnAt(t *testing.T) {
 		},
 	}
 
-	for _, c := range cases {
-		result, err := c.matrix.AddColumnAt(c.index, c.column)
-		assert.Equal(t, result, c.expectedResult)
-		assert.Equal(t, err, c.expectedError)
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			result, err := c.matrix.AddColumnAt(c.index, c.column)
+			assert.Equal(t, result, c.expectedResult)
+			assert.Equal(t, err, c.expectedError)
+		})
 	}
 }
 
 func TestAddMatrices(t *testing.T) {
-	cases := []struct {
-		matrix1       numericalgo.Matrix
-		matrix2       numericalgo.Matrix
-		result        numericalgo.Matrix
-		expectedError error
+	cases := map[string]struct {
+		matrix1        numericalgo.Matrix
+		matrix2        numericalgo.Matrix
+		expectedResult numericalgo.Matrix
+		expectedError  error
 	}{
-		// Basic
-		{
+		"basic matrix addition": {
 			matrix1: numericalgo.Matrix{
 				{1, 2},
 				{3, 4},
@@ -181,7 +169,7 @@ func TestAddMatrices(t *testing.T) {
 				{4, 3},
 				{2, 1},
 			},
-			result: numericalgo.Matrix{
+			expectedResult: numericalgo.Matrix{
 				{5, 5},
 				{5, 5},
 			},
@@ -200,32 +188,31 @@ func TestAddMatrices(t *testing.T) {
 		// 	expectedError: fmt.Errorf("Matrix dimensions must match"),
 		// },
 		// Adding two nils
-		{
-			matrix1:       nil,
-			matrix2:       nil,
-			result:        nil,
-			expectedError: fmt.Errorf("Matrices cannot be nil"),
+		"adding two nils": {
+			matrix1:        nil,
+			matrix2:        nil,
+			expectedResult: nil,
+			expectedError:  fmt.Errorf("Matrices cannot be nil"),
 		},
 	}
 
-	for _, c := range cases {
-		additionResult, err := c.matrix1.Add(c.matrix2)
-		isCorrect := c.result.IsEqual(additionResult)
-		assert.Equal(t, isCorrect, true)
-		assert.Equal(t, err, c.expectedError)
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			additionResult, err := c.matrix1.Add(c.matrix2)
+			assert.Equal(t, additionResult, c.expectedResult)
+			assert.Equal(t, err, c.expectedError)
+		})
 	}
-
 }
 
 func TestSubtractMatrices(t *testing.T) {
-	cases := []struct {
-		matrix1       numericalgo.Matrix
-		matrix2       numericalgo.Matrix
-		result        numericalgo.Matrix
-		expectedError error
+	cases := map[string]struct {
+		matrix1        numericalgo.Matrix
+		matrix2        numericalgo.Matrix
+		expectedResult numericalgo.Matrix
+		expectedError  error
 	}{
-		// Basic
-		{
+		"basic matrix subtraction": {
 			matrix1: numericalgo.Matrix{
 				{10, 5},
 				{3, 1},
@@ -234,14 +221,13 @@ func TestSubtractMatrices(t *testing.T) {
 				{1, 1},
 				{1, 1},
 			},
-			result: numericalgo.Matrix{
+			expectedResult: numericalgo.Matrix{
 				{9, 4},
 				{2, 0},
 			},
 			expectedError: nil,
 		},
-		// With negative result
-		{
+		"matrix subtraction with negative result": {
 			matrix1: numericalgo.Matrix{
 				{3, 2},
 				{3, 1},
@@ -250,14 +236,13 @@ func TestSubtractMatrices(t *testing.T) {
 				{4, 3},
 				{4, 2},
 			},
-			result: numericalgo.Matrix{
+			expectedResult: numericalgo.Matrix{
 				{-1, -1},
 				{-1, -1},
 			},
 			expectedError: nil,
 		},
-		// Wrong dimensions
-		{
+		"matrix subtraction with wrong dimensions": {
 			matrix1: numericalgo.Matrix{
 				{1, 2},
 				{3, 4},
@@ -265,35 +250,34 @@ func TestSubtractMatrices(t *testing.T) {
 			matrix2: numericalgo.Matrix{
 				{4, 3},
 			},
-			result:        nil,
-			expectedError: fmt.Errorf("Matrix dimensions must match"),
+			expectedResult: nil,
+			expectedError:  fmt.Errorf("Matrix dimensions must match"),
 		},
-		// Adding two nils
-		{
-			matrix1:       nil,
-			matrix2:       nil,
-			result:        nil,
-			expectedError: fmt.Errorf("Matrices cannot be nil"),
+		"matrix subtraction with two nils": {
+			matrix1:        nil,
+			matrix2:        nil,
+			expectedResult: nil,
+			expectedError:  fmt.Errorf("Matrices cannot be nil"),
 		},
 	}
 
-	for _, c := range cases {
-		additionResult, err := c.matrix1.Subtract(c.matrix2)
-		isCorrect := c.result.IsEqual(additionResult)
-		assert.Equal(t, isCorrect, true)
-		assert.Equal(t, err, c.expectedError)
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			additionResult, err := c.matrix1.Subtract(c.matrix2)
+			assert.Equal(t, additionResult, c.expectedResult)
+			assert.Equal(t, err, c.expectedError)
+		})
 	}
-
 }
 
 func TestGetColumnAt(t *testing.T) {
-	cases := []struct {
+	cases := map[string]struct {
 		matrix         numericalgo.Matrix
-		expectedResult numericalgo.Vector
 		i              int
+		expectedResult numericalgo.Vector
 		expectedError  error
 	}{
-		{
+		"getting column at index 1": {
 			matrix: numericalgo.Matrix{
 				{1, 2, 3},
 				{4, 5, 6},
@@ -302,7 +286,7 @@ func TestGetColumnAt(t *testing.T) {
 			expectedResult: numericalgo.Vector{2, 5},
 			expectedError:  nil,
 		},
-		{
+		"getting column at wrong index": {
 			matrix: numericalgo.Matrix{
 				{1, 2, 3},
 				{4, 5, 6},
@@ -311,7 +295,7 @@ func TestGetColumnAt(t *testing.T) {
 			expectedResult: nil,
 			expectedError:  fmt.Errorf("Index cannot be negative"),
 		},
-		{
+		"getting column at index which is too large": {
 			matrix: numericalgo.Matrix{
 				{1, 2, 3},
 				{4, 5, 6},
@@ -322,22 +306,23 @@ func TestGetColumnAt(t *testing.T) {
 		},
 	}
 
-	for _, c := range cases {
-		column, err := c.matrix.GetColumnAt(c.i)
-		assert.Equal(t, column, c.expectedResult)
-		assert.Equal(t, err, c.expectedError)
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			column, err := c.matrix.GetColumnAt(c.i)
+			assert.Equal(t, column, c.expectedResult)
+			assert.Equal(t, err, c.expectedError)
+		})
 	}
-
 }
 
 func TestGetRowAt(t *testing.T) {
-	cases := []struct {
+	cases := map[string]struct {
 		matrix         numericalgo.Matrix
 		expectedResult numericalgo.Vector
 		i              int
 		expectedError  error
 	}{
-		{
+		"getting the row at index 1": {
 			matrix: numericalgo.Matrix{
 				{1, 2, 3},
 				{4, 5, 6},
@@ -346,7 +331,7 @@ func TestGetRowAt(t *testing.T) {
 			expectedResult: numericalgo.Vector{4, 5, 6},
 			expectedError:  nil,
 		},
-		{
+		"getting the row at wrong index": {
 			matrix: numericalgo.Matrix{
 				{1, 2, 3},
 				{4, 5, 6},
@@ -355,7 +340,7 @@ func TestGetRowAt(t *testing.T) {
 			expectedResult: nil,
 			expectedError:  fmt.Errorf("Index cannot be negative"),
 		},
-		{
+		"getting the row at index which is too large": {
 			matrix: numericalgo.Matrix{
 				{1, 2, 3},
 				{4, 5, 6},
@@ -366,52 +351,51 @@ func TestGetRowAt(t *testing.T) {
 		},
 	}
 
-	for _, c := range cases {
-		column, err := c.matrix.GetRowAt(c.i)
-		assert.Equal(t, column, c.expectedResult)
-		assert.Equal(t, err, c.expectedError)
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			column, err := c.matrix.GetRowAt(c.i)
+			assert.Equal(t, column, c.expectedResult)
+			assert.Equal(t, err, c.expectedError)
+		})
 	}
 
 }
 
 func TestTransposeMatrix(t *testing.T) {
-	cases := []struct {
-		matrix        numericalgo.Matrix
-		transposed    numericalgo.Matrix
-		expectedError error
+	cases := map[string]struct {
+		matrix         numericalgo.Matrix
+		expectedResult numericalgo.Matrix
+		expectedError  error
 	}{
-		// Basic
-		{
+		"basic matrix transpose": {
 			matrix: numericalgo.Matrix{
 				{1, 2, 3},
 				{4, 5, 6},
 			},
-			transposed: numericalgo.Matrix{
+			expectedResult: numericalgo.Matrix{
 				{1, 4},
 				{2, 5},
 				{3, 6},
 			},
 			expectedError: nil,
 		},
-		// Turning it the other way around
-		{
+		"second basic matrix transpose": {
 			matrix: numericalgo.Matrix{
 				{1, 4},
 				{2, 5},
 				{3, 6},
 			},
-			transposed: numericalgo.Matrix{
+			expectedResult: numericalgo.Matrix{
 				{1, 2, 3},
 				{4, 5, 6},
 			},
 			expectedError: nil,
 		},
-		// With one dimension only
-		{
+		"transposing one-dimensional matrix": {
 			matrix: numericalgo.Matrix{
 				{1, 4},
 			},
-			transposed: numericalgo.Matrix{
+			expectedResult: numericalgo.Matrix{
 				{1},
 				{4},
 			},
@@ -423,29 +407,29 @@ func TestTransposeMatrix(t *testing.T) {
 		// 		{1, 4},
 		// 		{2},
 		// 	},
-		// 	transposed:    nil,
+		// 	expectedResult:    nil,
 		// 	expectedError: fmt.Errorf("Inconsistent dimensions"),
 		// },
 	}
 
-	for _, c := range cases {
-		transposed, err := c.matrix.Transpose()
-		isCorrect := c.transposed.IsEqual(transposed)
-		assert.Equal(t, isCorrect, true)
-		assert.Equal(t, err, c.expectedError)
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			transposed, err := c.matrix.Transpose()
+			assert.Equal(t, transposed, c.expectedResult)
+			assert.Equal(t, err, c.expectedError)
+		})
 	}
 
 }
 
 func TestMatrixMultiplication(t *testing.T) {
-	cases := []struct {
+	cases := map[string]struct {
 		matrix1        numericalgo.Matrix
 		matrix2        numericalgo.Matrix
 		expectedResult numericalgo.Matrix
 		expectedError  error
 	}{
-		// Basic
-		{
+		"basic matrix multiplication": {
 			matrix1: numericalgo.Matrix{
 				{1, 2, 3},
 				{4, 5, 6},
@@ -461,7 +445,7 @@ func TestMatrixMultiplication(t *testing.T) {
 			},
 			expectedError: nil,
 		},
-		{
+		"second matrix multiplication": {
 			matrix1: numericalgo.Matrix{
 				{1, 2, 3},
 				{4, 5, 6},
@@ -477,7 +461,7 @@ func TestMatrixMultiplication(t *testing.T) {
 			},
 			expectedError: nil,
 		},
-		{
+		"multiplying matrices with wrong dimensions": {
 			matrix1: numericalgo.Matrix{
 				{1, 2, 3},
 				{4, 5, 6},
@@ -489,7 +473,7 @@ func TestMatrixMultiplication(t *testing.T) {
 			expectedResult: nil,
 			expectedError:  fmt.Errorf("The number of columns of the 1st matrix must equal the number of rows of the 2nd matrix"),
 		},
-		{
+		"multiplying matrix with identity matrix": {
 			matrix1: numericalgo.Matrix{
 				{1, 2, 3},
 				{4, 5, 6},
@@ -507,7 +491,7 @@ func TestMatrixMultiplication(t *testing.T) {
 			},
 			expectedError: nil,
 		},
-		{
+		"multiplying matrices with different but correct dimensions": {
 			matrix1: numericalgo.Matrix{
 				{1, 2, 3},
 				{4, 5, 6},
@@ -523,7 +507,7 @@ func TestMatrixMultiplication(t *testing.T) {
 			},
 			expectedError: nil,
 		},
-		{
+		"multiplying 1D matrix with 2D one": {
 			matrix1: numericalgo.Matrix{
 				{3, 4, 2},
 			},
@@ -539,22 +523,23 @@ func TestMatrixMultiplication(t *testing.T) {
 		},
 	}
 
-	for _, c := range cases {
-		multiplied, err := c.matrix1.MultiplyBy(c.matrix2)
-		assert.Equal(t, multiplied, c.expectedResult)
-		assert.Equal(t, err, c.expectedError)
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			multiplied, err := c.matrix1.MultiplyBy(c.matrix2)
+			assert.Equal(t, multiplied, c.expectedResult)
+			assert.Equal(t, err, c.expectedError)
+		})
 	}
 }
 
 func TestMatrixLeftDivide(t *testing.T) {
-	cases := []struct {
+	cases := map[string]struct {
 		matrix1        numericalgo.Matrix
 		matrix2        numericalgo.Matrix
 		expectedResult numericalgo.Matrix
 		expectedError  error
 	}{
-		// Basic
-		{
+		"basic matrix left divide": {
 			matrix1: numericalgo.Matrix{
 				{2},
 				{4},
@@ -568,7 +553,7 @@ func TestMatrixLeftDivide(t *testing.T) {
 			},
 			expectedError: nil,
 		},
-		{
+		"second matrix left divide": {
 			matrix1: numericalgo.Matrix{
 				{1, 2},
 				{2, 2},
@@ -583,7 +568,7 @@ func TestMatrixLeftDivide(t *testing.T) {
 			},
 			expectedError: nil,
 		},
-		{
+		"left divide with wrong dimensions": {
 			matrix1: numericalgo.Matrix{
 				{1, 2},
 				{2, 2},
@@ -594,7 +579,7 @@ func TestMatrixLeftDivide(t *testing.T) {
 			expectedResult: nil,
 			expectedError:  fmt.Errorf("The number of columns of the 1st matrix must equal the number of rows of the 2nd matrix"),
 		},
-		{
+		"left divide - singular matrix": {
 			matrix1: numericalgo.Matrix{
 				{1, 2, 3},
 				{4, 5, 6},
@@ -607,7 +592,7 @@ func TestMatrixLeftDivide(t *testing.T) {
 			expectedResult: nil,
 			expectedError:  fmt.Errorf("Matrix is singular"),
 		},
-		{
+		"left divide with ones column": {
 			matrix1: numericalgo.Matrix{
 				{1, 1.3},
 				{1, 2.1},
@@ -626,7 +611,7 @@ func TestMatrixLeftDivide(t *testing.T) {
 			},
 			expectedError: nil,
 		},
-		{
+		"second left divide with ones column": {
 			matrix1: numericalgo.Matrix{
 				{1, 0.3},
 				{1, 0.8},
@@ -661,22 +646,24 @@ func TestMatrixLeftDivide(t *testing.T) {
 		},
 	}
 
-	for _, c := range cases {
-		leftDivided, err := c.matrix1.LeftDivide(c.matrix2)
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			leftDivided, err := c.matrix1.LeftDivide(c.matrix2)
 
-		isSimilar := leftDivided.IsSimilar(c.expectedResult, 1e-4)
-		assert.Equal(t, true, isSimilar)
-		assert.Equal(t, err, c.expectedError)
+			isSimilar := leftDivided.IsSimilar(c.expectedResult, 1e-4)
+			assert.Equal(t, true, isSimilar)
+			assert.Equal(t, err, c.expectedError)
+		})
 	}
 }
 
 func TestMatrixInverse(t *testing.T) {
-	cases := []struct {
+	cases := map[string]struct {
 		matrix         numericalgo.Matrix
 		expectedResult numericalgo.Matrix
 		expectedError  error
 	}{
-		{
+		"simple matrix inverse": {
 			matrix: numericalgo.Matrix{
 				{4, 7},
 				{2, 6},
@@ -687,14 +674,14 @@ func TestMatrixInverse(t *testing.T) {
 			},
 			expectedError: nil,
 		},
-		{
+		"inverting non-square matrix": {
 			matrix: numericalgo.Matrix{
 				{4, 7},
 			},
 			expectedResult: nil,
 			expectedError:  fmt.Errorf("Cannot invert non-square Matrix"),
 		},
-		{
+		"inverting singular matrix": {
 			matrix: numericalgo.Matrix{
 				{2, 4},
 				{6, 12},
@@ -702,7 +689,7 @@ func TestMatrixInverse(t *testing.T) {
 			expectedResult: nil,
 			expectedError:  fmt.Errorf("Matrix is singular"),
 		},
-		{
+		"second simple matrix inverse": {
 			matrix: numericalgo.Matrix{
 				{3, 0, 2},
 				{2, 0, -2},
@@ -717,21 +704,22 @@ func TestMatrixInverse(t *testing.T) {
 		},
 	}
 
-	for _, c := range cases {
-		inverted, err := c.matrix.Invert()
-		isSimilar := inverted.IsSimilar(c.expectedResult, 1e-10)
-		assert.Equal(t, true, isSimilar)
-		assert.Equal(t, err, c.expectedError)
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			inverted, err := c.matrix.Invert()
+			isSimilar := inverted.IsSimilar(c.expectedResult, 1e-10)
+			assert.Equal(t, true, isSimilar)
+			assert.Equal(t, err, c.expectedError)
+		})
 	}
 }
 func TestMatrixIsSimilar(t *testing.T) {
-	cases := []struct {
+	cases := map[string]struct {
 		matrix1        numericalgo.Matrix
 		matrix2        numericalgo.Matrix
 		expectedResult bool
 	}{
-		// Basic
-		{
+		"basic matrix similarity test": {
 			matrix1: numericalgo.Matrix{
 				{1, 2},
 				{3, 4},
@@ -742,8 +730,7 @@ func TestMatrixIsSimilar(t *testing.T) {
 			},
 			expectedResult: true,
 		},
-		// Wrong Dimensions
-		{
+		"matrix similarity with wrong dimensions": {
 			matrix1: numericalgo.Matrix{
 				{1, 2},
 			},
@@ -753,8 +740,7 @@ func TestMatrixIsSimilar(t *testing.T) {
 			},
 			expectedResult: false,
 		},
-		// Wrong values
-		{
+		"matrix similarity with non-similar matrices": {
 			matrix1: numericalgo.Matrix{
 				{1.2, 2.5},
 				{3.2, 5.4},
@@ -765,8 +751,7 @@ func TestMatrixIsSimilar(t *testing.T) {
 			},
 			expectedResult: false,
 		},
-		// Nil passed
-		{
+		"passing nil as a second matrix": {
 			matrix1: numericalgo.Matrix{
 				{1, 2},
 				{3, 5},
@@ -776,8 +761,10 @@ func TestMatrixIsSimilar(t *testing.T) {
 		},
 	}
 
-	for _, c := range cases {
-		isSimilar := c.matrix1.IsSimilar(c.matrix2, 0.1)
-		assert.Equal(t, c.expectedResult, isSimilar)
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			isSimilar := c.matrix1.IsSimilar(c.matrix2, 0.1)
+			assert.Equal(t, c.expectedResult, isSimilar)
+		})
 	}
 }

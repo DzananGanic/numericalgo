@@ -9,15 +9,14 @@ import (
 )
 
 func TestFitPolyFit(t *testing.T) {
-	cases := []struct {
+	cases := map[string]struct {
 		x             numericalgo.Vector
 		y             numericalgo.Vector
 		n             int
 		coef          numericalgo.Vector
 		expectedError error
 	}{
-		//Basic
-		{
+		"basic poly fit": {
 			x:             numericalgo.Vector{0.0, 1.0, 2.0, 3.0, 4.0, 5.0},
 			y:             numericalgo.Vector{0.0, 0.8, 0.9, 0.1, -0.8, -1.0},
 			n:             3,
@@ -26,18 +25,19 @@ func TestFitPolyFit(t *testing.T) {
 		},
 	}
 
-	for _, c := range cases {
-		pf := fit.NewPoly()
-		err := pf.Fit(c.x, c.y, c.n)
-		r := pf.Coeff().IsSimilar(c.coef, 1e-4)
-		assert.Equal(t, true, r)
-		assert.Equal(t, c.expectedError, err)
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			pf := fit.NewPoly()
+			err := pf.Fit(c.x, c.y, c.n)
+			r := pf.Coeff().IsSimilar(c.coef, 1e-4)
+			assert.Equal(t, true, r)
+			assert.Equal(t, c.expectedError, err)
+		})
 	}
 }
 
 func TestPredictPolyFit(t *testing.T) {
-
-	cases := []struct {
+	cases := map[string]struct {
 		x              []float64
 		y              []float64
 		n              int
@@ -45,8 +45,7 @@ func TestPredictPolyFit(t *testing.T) {
 		expectedResult float64
 		expectedError  error
 	}{
-		//Basic
-		{
+		"basic poly fit prediction": {
 			x:              numericalgo.Vector{0.0, 1.0, 2.0, 3.0, 4.0, 5.0},
 			y:              numericalgo.Vector{0.0, 0.8, 0.9, 0.1, -0.8, -1.0},
 			n:              3,
@@ -54,7 +53,7 @@ func TestPredictPolyFit(t *testing.T) {
 			expectedResult: 0.7888888888889196,
 			expectedError:  nil,
 		},
-		{
+		"second poly fit prediction": {
 			x:              numericalgo.Vector{0.0, 1.0, 2.0, 3.0, 4.0, 5.0},
 			y:              numericalgo.Vector{0.0, 0.8, 0.9, 0.1, -0.8, -1.0},
 			n:              3,
@@ -64,11 +63,13 @@ func TestPredictPolyFit(t *testing.T) {
 		},
 	}
 
-	for _, c := range cases {
-		pf := fit.NewPoly()
-		err := pf.Fit(c.x, c.y, c.n)
-		result := pf.Predict(c.valueToPredict)
-		assert.InEpsilon(t, c.expectedResult, result, 1e-2)
-		assert.Equal(t, c.expectedError, err)
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			pf := fit.NewPoly()
+			err := pf.Fit(c.x, c.y, c.n)
+			result := pf.Predict(c.valueToPredict)
+			assert.InEpsilon(t, c.expectedResult, result, 1e-2)
+			assert.Equal(t, c.expectedError, err)
+		})
 	}
 }

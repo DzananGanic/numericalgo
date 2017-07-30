@@ -10,7 +10,7 @@ import (
 
 func TestBisection(t *testing.T) {
 
-	cases := []struct {
+	cases := map[string]struct {
 		f             func(x float64) float64
 		eps           float64
 		l             float64
@@ -18,8 +18,7 @@ func TestBisection(t *testing.T) {
 		expectedValue float64
 		expectedError error
 	}{
-		// Basic test
-		{
+		"basic bisection": {
 			f: func(x float64) float64 {
 				return math.Pow(x, 2)
 			},
@@ -29,8 +28,7 @@ func TestBisection(t *testing.T) {
 			expectedValue: 0,
 			expectedError: nil,
 		},
-		// Bit more complex example
-		{
+		"bisecting more complex function": {
 			f: func(x float64) float64 {
 				return math.Pow(x, 3) - 2*math.Pow(x, 2) + 5
 			},
@@ -42,9 +40,11 @@ func TestBisection(t *testing.T) {
 		},
 	}
 
-	for _, c := range cases {
-		result, err := root.Bisection(c.f, c.eps, c.l, c.r)
-		assert.Equal(t, result, c.expectedValue)
-		assert.Equal(t, err, c.expectedError)
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			result, err := root.Bisection(c.f, c.eps, c.l, c.r)
+			assert.Equal(t, result, c.expectedValue)
+			assert.Equal(t, err, c.expectedError)
+		})
 	}
 }
