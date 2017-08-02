@@ -34,6 +34,15 @@ func (v Vector) IsSimilar(v2 Vector, tol float64) bool {
 	return true
 }
 
+// Sum returns the sum of all elements in the vector
+func (v Vector) Sum() float64 {
+	var sum float64
+	for _, val := range v {
+		sum += val
+	}
+	return sum
+}
+
 // Power receives a float as a parameter. It returns the vector whose elements are x^n.
 func (v Vector) Power(n float64) Vector {
 
