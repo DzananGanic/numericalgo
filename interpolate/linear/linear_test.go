@@ -1,15 +1,16 @@
-package interpolation_test
+package linear_test
 
 import (
 	"testing"
 
 	"fmt"
 
-	"github.com/DzananGanic/numericalgo/interpolation"
+	"github.com/DzananGanic/numericalgo/interpolate"
+	"github.com/DzananGanic/numericalgo/interpolate/linear"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLinearCanFitSamples(t *testing.T) {
+func TestLinearCanFit(t *testing.T) {
 	cases := map[string]struct {
 		x             []float64
 		y             []float64
@@ -29,8 +30,8 @@ func TestLinearCanFitSamples(t *testing.T) {
 
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			li := interpolation.NewLinear()
-			err := li.FitSamples(c.x, c.y)
+			li := linear.New()
+			err := li.Fit(c.x, c.y)
 			assert.Equal(t, c.expectedError, err)
 		})
 	}
@@ -90,9 +91,9 @@ func TestLinearCanInterpolateSingleValue(t *testing.T) {
 
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			li := interpolation.NewLinear()
-			li.FitSamples(c.x, c.y)
-			estimate, err := interpolation.InterpolateSingleValue(li, c.valueToInterpolate)
+			li := linear.New()
+			li.Fit(c.x, c.y)
+			estimate, err := interpolate.WithSingle(li, c.valueToInterpolate)
 			assert.Equal(t, c.expectedEstimate, estimate)
 			assert.Equal(t, c.expectedError, err)
 		})
@@ -118,9 +119,9 @@ func TestLinearCanInterpolateMultipleValues(t *testing.T) {
 
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			li := interpolation.NewLinear()
-			li.FitSamples(c.x, c.y)
-			estimates, err := interpolation.InterpolateMultipleValues(li, c.valuesToInterpolate)
+			li := linear.New()
+			li.Fit(c.x, c.y)
+			estimates, err := interpolate.WithMulti(li, c.valuesToInterpolate)
 			assert.Equal(t, c.expectedEstimates, estimates)
 			assert.Equal(t, c.expectedError, err)
 		})

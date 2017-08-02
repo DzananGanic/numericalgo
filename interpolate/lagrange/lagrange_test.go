@@ -1,14 +1,15 @@
-package interpolation_test
+package lagrange_test
 
 import (
 	"fmt"
 	"testing"
 
-	"github.com/DzananGanic/numericalgo/interpolation"
+	"github.com/DzananGanic/numericalgo/interpolate"
+	"github.com/DzananGanic/numericalgo/interpolate/lagrange"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLagrangeCanFitSamples(t *testing.T) {
+func TestLagrangeCanFit(t *testing.T) {
 	cases := map[string]struct {
 		x             []float64
 		y             []float64
@@ -28,8 +29,9 @@ func TestLagrangeCanFitSamples(t *testing.T) {
 
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			lgi := interpolation.NewLagrange()
-			err := lgi.FitSamples(c.x, c.y)
+			lgi := lagrange.New()
+			//lgi := interpolation.NewLagrange()
+			err := lgi.Fit(c.x, c.y)
 			assert.Equal(t, c.expectedError, err)
 		})
 	}
@@ -89,9 +91,9 @@ func TestLagrangeCanInterpolateSingleValue(t *testing.T) {
 
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			lg := interpolation.NewLagrange()
-			lg.FitSamples(c.x, c.y)
-			estimate, err := interpolation.InterpolateSingleValue(lg, c.valueToInterpolate)
+			lg := lagrange.New()
+			lg.Fit(c.x, c.y)
+			estimate, err := interpolate.WithSingle(lg, c.valueToInterpolate)
 			assert.Equal(t, c.expectedEstimate, estimate)
 			assert.Equal(t, c.expectedError, err)
 		})
@@ -117,9 +119,9 @@ func TestLagrangeCanInterpolateMultipleValues(t *testing.T) {
 
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			lg := interpolation.NewLagrange()
-			lg.FitSamples(c.x, c.y)
-			estimates, err := interpolation.InterpolateMultipleValues(lg, c.valuesToInterpolate)
+			lg := lagrange.New()
+			lg.Fit(c.x, c.y)
+			estimates, err := interpolate.WithMulti(lg, c.valuesToInterpolate)
 			assert.Equal(t, c.expectedEstimates, estimates)
 			assert.Equal(t, c.expectedError, err)
 		})
