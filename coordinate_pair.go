@@ -11,17 +11,17 @@ type CoordinatePair struct {
 }
 
 // SortCoordinatePairs is a function which receives a slice of CoordinatePairs, and sorts it in ascending order.
-func SortCoordinatePairs(pairs []CoordinatePair) {
-	sort.Slice(pairs, func(i, j int) bool {
-		return pairs[i].X < pairs[j].X
+func SortCoordinatePairs(cp []CoordinatePair) {
+	sort.Slice(cp, func(i, j int) bool {
+		return cp[i].X < cp[j].X
 	})
 }
 
 // SlicesToCoordinatePairs is a function which receives two slices of floats (x and y), turns them into a slice of CoordinatePairs, and returns the result.
 func SlicesToCoordinatePairs(x, y []float64) []CoordinatePair {
-	coordinatePairs := make([]CoordinatePair, len(x))
+	cp := make([]CoordinatePair, len(x))
 	for i := 0; i < len(x); i++ {
-		coordinatePairs = append(coordinatePairs, CoordinatePair{X: x[i], Y: y[i]})
+		cp = append(cp, CoordinatePair{X: x[i], Y: y[i]})
 	}
-	return coordinatePairs
+	return cp
 }

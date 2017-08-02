@@ -15,26 +15,26 @@ type validateInterpolator interface {
 
 // WithMulti accepts the slice of float64, and returns the interpolated values for the passed slice values, and the error
 func WithMulti(vi validateInterpolator, vals []float64) ([]float64, error) {
-	var result []float64
+	var r []float64
 	for _, val := range vals {
-		estimate, err := WithSingle(vi, val)
+		est, err := WithSingle(vi, val)
 		if err != nil {
-			return result, err
+			return r, err
 		}
-		result = append(result, estimate)
+		r = append(r, est)
 	}
-	return result, nil
+	return r, nil
 }
 
 // WithSingle accepts the single float64 value, and returns the interpolated value for it, and the error
 func WithSingle(vi validateInterpolator, val float64) (float64, error) {
-	var estimate float64
+	var est float64
 
 	err := vi.Validate(val)
 	if err != nil {
-		return estimate, err
+		return est, err
 	}
 
-	estimate = vi.Interpolate(val)
-	return estimate, nil
+	est = vi.Interpolate(val)
+	return est, nil
 }

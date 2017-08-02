@@ -1,16 +1,18 @@
-package fit
+package linear
 
 import (
 	"github.com/DzananGanic/numericalgo"
 )
 
-// Linear is a type which embeds Base type. Linear type fits two vectors x and y, finds the appropriate coefficients and predicts the value such that y=p+qx is the best approximation of the given data in a sense of the least square error.
+// Linear type fits two vectors x and y, finds the appropriate coefficients and predicts the value such that y=p+qx is the best approximation of the given data in a sense of the least square error.
 type Linear struct {
-	Base
+	x     numericalgo.Vector
+	y     numericalgo.Vector
+	Coeff numericalgo.Vector
 }
 
-// NewLinear returns the pointer to the new Linear type
-func NewLinear() *Linear {
+// New returns the pointer to the new Linear type
+func New() *Linear {
 	lf := &Linear{}
 	return lf
 }
@@ -49,7 +51,7 @@ func (l *Linear) Fit(x numericalgo.Vector, y numericalgo.Vector) error {
 		return err
 	}
 
-	l.coeff, err = coeff.GetColumnAt(0)
+	l.Coeff, err = coeff.GetColumnAt(0)
 
 	if err != nil {
 		return err
@@ -60,6 +62,6 @@ func (l *Linear) Fit(x numericalgo.Vector, y numericalgo.Vector) error {
 
 // Predict function in Linear type accepts value to be predicted, and returns the predicted value based on the y=p+q*x formula.
 func (l *Linear) Predict(val float64) float64 {
-	c := l.Coeff()
+	c := l.Coeff
 	return c[0] + c[1]*val
 }

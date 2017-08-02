@@ -1,16 +1,18 @@
-package fit
+package exponential
 
 import (
 	"github.com/DzananGanic/numericalgo"
 )
 
-// Exponential is a type which embeds Base type. Exponential type fits two vectors x and y, finds the appropriate coefficients and predicts the value such that y=p*e^(q*x) is the best approximation of the given data in a sense of the least square error.
+// Exponential type fits two vectors x and y, finds the appropriate coefficients and predicts the value such that y=p*e^(q*x) is the best approximation of the given data in a sense of the least square error.
 type Exponential struct {
-	Base
+	x     numericalgo.Vector
+	y     numericalgo.Vector
+	Coeff numericalgo.Vector
 }
 
-// NewExponential returns the pointer to the new Exponential type
-func NewExponential() *Exponential {
+// New returns the pointer to the new Exponential type
+func New() *Exponential {
 	ef := &Exponential{}
 	return ef
 }
@@ -51,7 +53,7 @@ func (e *Exponential) Fit(x numericalgo.Vector, y numericalgo.Vector) error {
 	}
 
 	expCoeff := coeff.Exp()
-	e.coeff, err = expCoeff.GetColumnAt(0)
+	e.Coeff, err = expCoeff.GetColumnAt(0)
 
 	if err != nil {
 		return err
@@ -62,6 +64,6 @@ func (e *Exponential) Fit(x numericalgo.Vector, y numericalgo.Vector) error {
 
 // Predict function in Exponential type accepts value to be predicted, and returns the predicted value based on the y=p*e^(q*x) formula.
 func (e *Exponential) Predict(val float64) float64 {
-	c := e.Coeff()
+	c := e.Coeff
 	return c[1]*val + c[0]
 }

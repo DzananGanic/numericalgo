@@ -18,39 +18,39 @@ func New() *Linear {
 	return li
 }
 
-func (li *Linear) Interpolate(valueToInterpolate float64) float64 {
-	var estimate float64
+func (li *Linear) Interpolate(val float64) float64 {
+	var est float64
 
-	left, right := li.findNearestNeighbors(valueToInterpolate, 0, len(li.XYPairs)-1)
+	l, r := li.findNearestNeighbors(val, 0, len(li.XYPairs)-1)
 
-	leftX := li.XYPairs[left].X
-	rightX := li.XYPairs[right].X
-	leftY := li.XYPairs[left].Y
-	rightY := li.XYPairs[right].Y
-	estimate = leftY + (rightY-leftY)/(rightX-leftX)*(valueToInterpolate-leftX)
+	lX := li.XYPairs[l].X
+	rX := li.XYPairs[r].X
+	lY := li.XYPairs[l].Y
+	rY := li.XYPairs[r].Y
 
-	return estimate
+	est = lY + (rY-lY)/(rX-lX)*(val-lX)
+	return est
 }
 
-func (li *Linear) Validate(valueToInterpolate float64) error {
+func (li *Linear) Validate(val float64) error {
 
-	if valueToInterpolate < li.XYPairs[0].X {
+	if val < li.XYPairs[0].X {
 		return fmt.Errorf("Value to interpolate is too small and not in range")
 	}
 
-	if valueToInterpolate > li.XYPairs[len(li.XYPairs)-1].X {
+	if val > li.XYPairs[len(li.XYPairs)-1].X {
 		return fmt.Errorf("Value to interpolate is too large and not in range")
 	}
 
 	return nil
 }
 
-func (li *Linear) findNearestNeighbors(valueToInterpolate float64, left, right int) (int, int) {
-	middle := (left + right) / 2
-	if (valueToInterpolate >= li.XYPairs[middle-1].X) && (valueToInterpolate <= li.XYPairs[middle].X) {
+func (li *Linear) findNearestNeighbors(val float64, l, r int) (int, int) {
+	middle := (l + r) / 2
+	if (val >= li.XYPairs[middle-1].X) && (val <= li.XYPairs[middle].X) {
 		return middle - 1, middle
-	} else if valueToInterpolate < li.XYPairs[middle-1].X {
-		return li.findNearestNeighbors(valueToInterpolate, left, middle-2)
+	} else if val < li.XYPairs[middle-1].X {
+		return li.findNearestNeighbors(val, l, middle-2)
 	}
-	return li.findNearestNeighbors(valueToInterpolate, middle+1, right)
+	return li.findNearestNeighbors(val, middle+1, r)
 }

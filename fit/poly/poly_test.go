@@ -1,10 +1,10 @@
-package fit_test
+package poly_test
 
 import (
 	"testing"
 
 	"github.com/DzananGanic/numericalgo"
-	"github.com/DzananGanic/numericalgo/fit"
+	"github.com/DzananGanic/numericalgo/fit/poly"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -27,9 +27,9 @@ func TestFitPolyFit(t *testing.T) {
 
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			pf := fit.NewPoly()
+			pf := poly.New()
 			err := pf.Fit(c.x, c.y, c.n)
-			r := pf.Coeff().IsSimilar(c.coef, 1e-4)
+			r := pf.Coeff.IsSimilar(c.coef, 1e-4)
 			assert.Equal(t, true, r)
 			assert.Equal(t, c.expectedError, err)
 		})
@@ -65,7 +65,7 @@ func TestPredictPolyFit(t *testing.T) {
 
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			pf := fit.NewPoly()
+			pf := poly.New()
 			err := pf.Fit(c.x, c.y, c.n)
 			result := pf.Predict(c.valueToPredict)
 			assert.InEpsilon(t, c.expectedResult, result, 1e-2)
