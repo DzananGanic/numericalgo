@@ -35,14 +35,14 @@ func (p *Poly) Fit(x numericalgo.Vector, y numericalgo.Vector, n int) error {
 		ones[i] = 1
 	}
 
-	X, err := xT.AddColumnAt(0, ones)
+	X, err := xT.InsertCol(0, ones)
 
 	if err != nil {
 		return err
 	}
 
 	for i := 2; i <= n; i++ {
-		X, err = X.AddColumnAt(i, x.Power(float64(i)))
+		X, err = X.InsertCol(i, x.Power(float64(i)))
 	}
 
 	Y, err := yMatrix.Transpose()
@@ -57,7 +57,7 @@ func (p *Poly) Fit(x numericalgo.Vector, y numericalgo.Vector, n int) error {
 		return err
 	}
 
-	p.Coeff, err = coeff.GetColumnAt(0)
+	p.Coeff, err = coeff.Col(0)
 
 	if err != nil {
 		return err

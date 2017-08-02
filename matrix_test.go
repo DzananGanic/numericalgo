@@ -65,7 +65,7 @@ func TestCompareMatrices(t *testing.T) {
 	}
 }
 
-func TestMatrixAddColumnAt(t *testing.T) {
+func TestMatrixInsertCol(t *testing.T) {
 	cases := map[string]struct {
 		matrix         numericalgo.Matrix
 		column         numericalgo.Vector
@@ -146,7 +146,7 @@ func TestMatrixAddColumnAt(t *testing.T) {
 
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			result, err := c.matrix.AddColumnAt(c.index, c.column)
+			result, err := c.matrix.InsertCol(c.index, c.column)
 			assert.Equal(t, result, c.expectedResult)
 			assert.Equal(t, err, c.expectedError)
 		})
@@ -270,7 +270,7 @@ func TestSubtractMatrices(t *testing.T) {
 	}
 }
 
-func TestGetColumnAt(t *testing.T) {
+func TestCol(t *testing.T) {
 	cases := map[string]struct {
 		matrix         numericalgo.Matrix
 		i              int
@@ -308,14 +308,14 @@ func TestGetColumnAt(t *testing.T) {
 
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			column, err := c.matrix.GetColumnAt(c.i)
+			column, err := c.matrix.Col(c.i)
 			assert.Equal(t, column, c.expectedResult)
 			assert.Equal(t, err, c.expectedError)
 		})
 	}
 }
 
-func TestGetRowAt(t *testing.T) {
+func TestRow(t *testing.T) {
 	cases := map[string]struct {
 		matrix         numericalgo.Matrix
 		expectedResult numericalgo.Vector
@@ -353,7 +353,7 @@ func TestGetRowAt(t *testing.T) {
 
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			column, err := c.matrix.GetRowAt(c.i)
+			column, err := c.matrix.Row(c.i)
 			assert.Equal(t, column, c.expectedResult)
 			assert.Equal(t, err, c.expectedError)
 		})

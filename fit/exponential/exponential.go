@@ -40,7 +40,7 @@ func (e *Exponential) Fit(x numericalgo.Vector, y numericalgo.Vector) error {
 		ones[i] = 1
 	}
 
-	X, err := xLogT.AddColumnAt(0, ones)
+	X, err := xLogT.InsertCol(0, ones)
 
 	if err != nil {
 		return err
@@ -53,7 +53,7 @@ func (e *Exponential) Fit(x numericalgo.Vector, y numericalgo.Vector) error {
 	}
 
 	expCoeff := coeff.Exp()
-	e.Coeff, err = expCoeff.GetColumnAt(0)
+	e.Coeff, err = expCoeff.Col(0)
 
 	if err != nil {
 		return err

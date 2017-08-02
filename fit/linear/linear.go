@@ -33,7 +33,7 @@ func (l *Linear) Fit(x numericalgo.Vector, y numericalgo.Vector) error {
 		ones[i] = 1
 	}
 
-	X, err := xT.AddColumnAt(0, ones)
+	X, err := xT.InsertCol(0, ones)
 
 	if err != nil {
 		return err
@@ -51,7 +51,7 @@ func (l *Linear) Fit(x numericalgo.Vector, y numericalgo.Vector) error {
 		return err
 	}
 
-	l.Coeff, err = coeff.GetColumnAt(0)
+	l.Coeff, err = coeff.Col(0)
 
 	if err != nil {
 		return err

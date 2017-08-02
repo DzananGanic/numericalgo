@@ -172,7 +172,7 @@ func (m Matrix) MultiplyBy(m2 Matrix) (Matrix, error) {
 	for currentRowIndex := range m {
 		r = append(r, Vector{})
 		for currentColumnIndex := range m2[0] {
-			m2Col, err := m2.GetColumnAt(currentColumnIndex)
+			m2Col, err := m2.Col(currentColumnIndex)
 
 			if err != nil {
 				return r, err
@@ -190,8 +190,8 @@ func (m Matrix) MultiplyBy(m2 Matrix) (Matrix, error) {
 	return r, nil
 }
 
-// AddColumnAt receives the index and the vector. It adds the provided vector as a column at index k, and returns the resulting matrix and the error (if there is any).
-func (m Matrix) AddColumnAt(k int, c Vector) (Matrix, error) {
+// InsertCol receives the index and the vector. It adds the provided vector as a column at index k, and returns the resulting matrix and the error (if there is any).
+func (m Matrix) InsertCol(k int, c Vector) (Matrix, error) {
 	var r Matrix
 
 	if k < 0 {
@@ -211,8 +211,8 @@ func (m Matrix) AddColumnAt(k int, c Vector) (Matrix, error) {
 	return r, nil
 }
 
-// GetRowAt receives the index as a parameter. It returns the vector row at provided index and the error (if there is any).
-func (m Matrix) GetRowAt(i int) (Vector, error) {
+// Row receives the index as a parameter. It returns the vector row at provided index and the error (if there is any).
+func (m Matrix) Row(i int) (Vector, error) {
 	if i < 0 {
 		return nil, fmt.Errorf("Index cannot be negative")
 	} else if i > len(m) {
@@ -221,8 +221,8 @@ func (m Matrix) GetRowAt(i int) (Vector, error) {
 	return m[i], nil
 }
 
-// GetColumnAt receives the index as a parameter. It returns the vector column at provided index and the error (if there is any).
-func (m Matrix) GetColumnAt(i int) (Vector, error) {
+// Col receives the index as a parameter. It returns the vector column at provided index and the error (if there is any).
+func (m Matrix) Col(i int) (Vector, error) {
 	var r Vector
 
 	if i < 0 {
@@ -243,7 +243,7 @@ func (m Matrix) Transpose() (Matrix, error) {
 	var t Matrix
 
 	for columnIndex := range m[0] {
-		column, err := m.GetColumnAt(columnIndex)
+		column, err := m.Col(columnIndex)
 		if err != nil {
 			return t, err
 		}
