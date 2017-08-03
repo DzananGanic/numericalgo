@@ -1,5 +1,7 @@
 # numericalgo
 
+[![Build Status](https://travis-ci.org/DzananGanic/numericalgo.svg?branch=master)](https://travis-ci.org/DzananGanic/numericalgo)
+
 numericalgo is a set of numerical methods implemented in Golang. The idea was to implement everything from scratch - not just the methods, but the custom types as well (matrices, vectors etc.)
 
 ## Currently implemented methods:
