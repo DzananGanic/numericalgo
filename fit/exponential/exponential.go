@@ -53,6 +53,7 @@ func (e *Exponential) Fit(x numericalgo.Vector, y numericalgo.Vector) error {
 	}
 
 	expCoeff := coeff.Exp()
+
 	e.Coeff, err = expCoeff.Col(0)
 
 	if err != nil {

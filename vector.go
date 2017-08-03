@@ -46,11 +46,14 @@ func (v Vector) Sum() float64 {
 // Power receives a float as a parameter. It returns the vector whose elements are x^n.
 func (v Vector) Power(n float64) Vector {
 
-	for i, val := range v {
-		v[i] = math.Pow(val, n)
+	var result Vector
+
+	for _, val := range v {
+		result = append(result, math.Pow(val, n))
+		//v[i] = math.Pow(val, n)
 	}
 
-	return v
+	return result
 }
 
 // Add receives another vector as a parameter. It adds the two vectors and returns the result vector and the error (if there is any).

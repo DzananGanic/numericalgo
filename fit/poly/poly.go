@@ -66,7 +66,7 @@ func (p *Poly) Fit(x numericalgo.Vector, y numericalgo.Vector, n int) error {
 	return nil
 }
 
-// Predict function in Linear type accepts value to be predicted, and returns the predicted value based on the y=p1+p2*x+p3*x^2+...+p(n+1)*x^n formula.
+// Predict function in Poly type accepts value to be predicted, and returns the predicted value based on the y=p1+p2*x+p3*x^2+...+p(n+1)*x^n formula.
 func (p *Poly) Predict(val float64) float64 {
 	var result float64
 	c := p.Coeff

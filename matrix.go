@@ -89,22 +89,28 @@ func (m Matrix) Invert() (Matrix, error) {
 
 // Log applies natural logarithm to all the elements of the matrix, and returns the resulting matrix.
 func (m Matrix) Log() Matrix {
+	row, col := m.Dim()
+	result := make(Matrix, row)
 	for i := range m {
+		result[i] = make(Vector, col)
 		for j := range m[i] {
-			m[i][j] = math.Log(m[i][j])
+			result[i][j] = math.Log(m[i][j])
 		}
 	}
-	return m
+	return result
 }
 
-// Log applies e^x to all the elements of the matrix, and returns the resulting matrix.
+// Exp applies e^x to all the elements of the matrix, and returns the resulting matrix.
 func (m Matrix) Exp() Matrix {
+	row, col := m.Dim()
+	result := make(Matrix, row)
 	for i := range m {
+		result[i] = make(Vector, col)
 		for j := range m[i] {
-			m[i][j] = math.Exp(m[i][j])
+			result[i][j] = math.Exp(m[i][j])
 		}
 	}
-	return m
+	return result
 }
 
 // LeftDivide receives another matrix as a parameter. The method solves the symbolic system of linear equations in matrix form, A*X = B for X. It returns the results in matrix form and error (if there is any).
