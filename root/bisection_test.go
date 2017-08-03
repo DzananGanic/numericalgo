@@ -36,15 +36,13 @@ func TestBisection(t *testing.T) {
 			l:             -1.5,
 			r:             -1,
 			expectedValue: -1.2421875,
-			expectedError: nil,
 		},
 	}
 
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			result, err := root.Bisection(c.f, c.eps, c.l, c.r)
+			result := root.Bisection(c.f, c.eps, c.l, c.r)
 			assert.Equal(t, result, c.expectedValue)
-			assert.Equal(t, err, c.expectedError)
 		})
 	}
 }
