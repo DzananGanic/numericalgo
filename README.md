@@ -1,28 +1,35 @@
 # numericalgo
 
 [![Build Status](https://travis-ci.org/DzananGanic/numericalgo.svg?branch=master)](https://travis-ci.org/DzananGanic/numericalgo)
-[![Coverage Status](https://coveralls.io/repos/github/DzananGanic/numericalgo/badge.svg)](https://coveralls.io/github/DzananGanic/numericalgo)
+[![Coverage Status](https://coveralls.io/repos/github/DzananGanic/numericalgo/badge.svg?branch=master)](https://coveralls.io/github/DzananGanic/numericalgo?branch=master)
 
 numericalgo is a set of numerical methods implemented in Golang. The idea was to implement everything from scratch - not just the methods, but the custom types as well (matrices, vectors etc.)
 
+## Installation
+numericalgo does not use any third party libraries. For getting it to run on your machine, you just run standard go get:
+```go
+go get github.com/DzananGanic/numericalgo
+```
+
 ## Currently implemented methods:
-- [Interpolation:](https://github.com/DzananGanic/numericalgo/tree/master/interpolate)
+
+- [Interpolation:](https://github.com/DzananGanic/numericalgo/tree/master/interpolate) ( [Usage](https://github.com/DzananGanic/numericalgo#interpolation) )
   - [Linear](https://github.com/DzananGanic/numericalgo/tree/master/interpolate/linear)
   - [Lagrange](https://github.com/DzananGanic/numericalgo/tree/master/interpolate/lagrange)
-- [Regressions (fits)](https://github.com/DzananGanic/numericalgo/tree/master/fit)
+- [Regressions (fits)](https://github.com/DzananGanic/numericalgo/tree/master/fit) ( [Usage](https://github.com/DzananGanic/numericalgo#fit) )
   - [Linear](https://github.com/DzananGanic/numericalgo/tree/master/fit/linear)
   - [Polynomial](https://github.com/DzananGanic/numericalgo/tree/master/fit/poly)
   - [Exponential](https://github.com/DzananGanic/numericalgo/tree/master/fit/exponential)
-- [Root finding:](https://github.com/DzananGanic/numericalgo/tree/master/root)
-  - Bisection
-  - Newton's method
-- [Numerical Differentiation](https://github.com/DzananGanic/numericalgo/tree/master/differentiate)
-  - Backward difference formula
-  - Forward difference formula
-  - Central difference formula
-- [Numerical Integration](https://github.com/DzananGanic/numericalgo/tree/master/integrate)
-  - Trapezoidal rule integration
-  - Simpson’s rule integration
+- [Root finding:](https://github.com/DzananGanic/numericalgo/tree/master/root) ( [Usage](https://github.com/DzananGanic/numericalgo#root-finding) )
+  - [Bisection](https://github.com/DzananGanic/numericalgo/tree/master/root)
+  - [Newton's method](https://github.com/DzananGanic/numericalgo/tree/master/root)
+- [Numerical Differentiation](https://github.com/DzananGanic/numericalgo/tree/master/differentiate) ( [Usage](https://github.com/DzananGanic/numericalgo#differentiate) )
+  - [Backward difference formula](https://github.com/DzananGanic/numericalgo/tree/master/differentiate)
+  - [Forward difference formula](https://github.com/DzananGanic/numericalgo/tree/master/differentiate)
+  - [Central difference formula](https://github.com/DzananGanic/numericalgo/tree/master/differentiate)
+- [Numerical Integration](https://github.com/DzananGanic/numericalgo/tree/master/integrate) ( [Usage](https://github.com/DzananGanic/numericalgo#integrate) )
+  - [Trapezoidal rule integration](https://github.com/DzananGanic/numericalgo/tree/master/integrate)
+  - [Simpson’s rule integration](https://github.com/DzananGanic/numericalgo/tree/master/integrate)
 
 With numericalgo, it is also possible to solve linear equations and work with matrices and vectors, as those types are provided.
 
