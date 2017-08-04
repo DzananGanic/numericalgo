@@ -1,11 +1,15 @@
 package fit
 
+import (
+	"github.com/DzananGanic/numericalgo"
+)
+
 type predictor interface {
 	Predict(float64) float64
 }
 
 // PredictMulti accepts the slice of float64, and returns the predicted values for the passed slice values, and the error
-func PredictMulti(p predictor, vals []float64) []float64 {
+func PredictMulti(p predictor, vals numericalgo.Vector) numericalgo.Vector {
 	var r []float64
 	for _, val := range vals {
 		est := p.Predict(val)

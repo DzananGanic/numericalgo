@@ -1,6 +1,7 @@
 package integrate_test
 
 import (
+	"fmt"
 	"math"
 	"testing"
 
@@ -78,12 +79,26 @@ func TestTrapezoid(t *testing.T) {
 			expectedValue: 0.9994859,
 			expectedError: nil,
 		},
+		"f(x) = sin(x) with n = 0": {
+			f: func(x float64) float64 {
+				return math.Sin(x)
+			},
+			l:             0,
+			r:             math.Pi / 2,
+			n:             0,
+			expectedValue: 0,
+			expectedError: fmt.Errorf("Number of subdivisions n cannot be 0"),
+		},
 	}
 
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
 			result, err := integrate.Trapezoid(c.f, c.l, c.r, c.n)
-			assert.InEpsilon(t, result, c.expectedValue, 1e-4)
+			if result != 0 {
+				assert.InEpsilon(t, result, c.expectedValue, 1e-4)
+			} else {
+				assert.Equal(t, result, c.expectedValue)
+			}
 			assert.Equal(t, err, c.expectedError)
 		})
 	}
