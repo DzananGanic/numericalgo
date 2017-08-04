@@ -36,7 +36,15 @@ func (lg *Lagrange) Interpolate(val float64) float64 {
 
 func (lg *Lagrange) Validate(val float64) error {
 
-	// TODO: Check case where lg.x[i]-lg.x[j] is 0
+	for i := 0; i < len(lg.X); i++ {
+		for j := 0; j < len(lg.X); j++ {
+			if i != j {
+				if lg.X[i]-lg.X[j] == 0 {
+					return fmt.Errorf("There are at least 2 same X values. This will result in division by zero in Lagrange interpolation")
+				}
+			}
+		}
+	}
 
 	if val < lg.XYPairs[0].X {
 		return fmt.Errorf("Value to interpolate is too small and not in range")

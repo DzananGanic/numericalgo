@@ -87,6 +87,13 @@ func TestLagrangeCanInterpolateSingleValue(t *testing.T) {
 			expectedEstimate:   0,
 			expectedError:      fmt.Errorf("Value to interpolate is too small and not in range"),
 		},
+		"same x values error": {
+			x:                  []float64{1.8, 1.8, 1.8, 1.3, 4.4, 3.1, 3.8, 5.5, 6.2},
+			y:                  []float64{4.45, 3.02, 4.81, 3.37, 2.72, 3.96, 3.31, 3.43, 4.07},
+			valueToInterpolate: -20,
+			expectedEstimate:   0,
+			expectedError:      fmt.Errorf("There are at least 2 same X values. This will result in division by zero in Lagrange interpolation"),
+		},
 	}
 
 	for name, c := range cases {
