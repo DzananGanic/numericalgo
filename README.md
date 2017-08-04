@@ -96,35 +96,6 @@ err := lf.Fit(x, y)
 result := fit.PredictMulti(lf, valsToPred)
 ```
 
-### Integrate
-We need to define the f(x) function with the signature func (float64) float64. 'l' is our left bound and 'r' is our right bound for the integration. 'n' is the number of subdivisions (the higher the number, the more precise our result will be). Then we just call integrate.Trapezoid function and pass the defined values. It is the same thing with Simpsons rule (we just call integrate.Simpson)
-
-```go
-f := func(x float64) float64 {
-  return math.Sin(x)
-}
-l := 0
-r := math.Pi / 2
-n := 20
-
-result, err := integrate.Trapezoid(f, l, r, n)
-// (0.999, nil)
-```
-
-### Differentiate
-When differentiating, we need to define f(x) function with the signature func (float64) float64, value and the step size (the smaller the step size - the better the precision). Then we call the Central, Backward or Forward function from the differentiate package
-
-```go
-f := func(x float64) float64 {
-  return math.Cos(math.Pow(x,2) - 2)
-}
-val := 1
-h := 0.1
-
-result, err := differentiate.Central(f, val, h)
-// (1.6609, nil)
-```
-
 ### Root finding
 #### Bisection
 When performing root finding, we define f(x) function with the signature func (float64) float64, eps as the tolerance, and left and right bounds of the function. Then we simply call the Bisection function from the root package while passing those parameters.
@@ -152,4 +123,34 @@ iter := 3
 
 result := root.Newton(f, initialGuess, iter)
 // -1.2419
+```
+
+### Differentiate
+When differentiating, we need to define f(x) function with the signature func (float64) float64, value and the step size (the smaller the step size - the better the precision). Then we call the Central, Backward or Forward function from the differentiate package
+
+```go
+f := func(x float64) float64 {
+  return math.Cos(math.Pow(x,2) - 2)
+}
+val := 1
+h := 0.1
+
+result, err := differentiate.Central(f, val, h)
+// (1.6609, nil)
+```
+
+
+### Integrate
+We need to define the f(x) function with the signature func (float64) float64. 'l' is our left bound and 'r' is our right bound for the integration. 'n' is the number of subdivisions (the higher the number, the more precise our result will be). Then we just call integrate.Trapezoid function and pass the defined values. It is the same thing with Simpsons rule (we just call integrate.Simpson)
+
+```go
+f := func(x float64) float64 {
+  return math.Sin(x)
+}
+l := 0
+r := math.Pi / 2
+n := 20
+
+result, err := integrate.Trapezoid(f, l, r, n)
+// (0.999, nil)
 ```
