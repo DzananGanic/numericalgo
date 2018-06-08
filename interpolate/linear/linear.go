@@ -50,7 +50,18 @@ func (li *Linear) findNearestNeighbors(val float64, l, r int) (int, int) {
 	if (val >= li.XYPairs[middle-1].X) && (val <= li.XYPairs[middle].X) {
 		return middle - 1, middle
 	} else if val < li.XYPairs[middle-1].X {
+		x := middle - 2
+		if x == r {
+			return middle - 1, middle
+		}
+
 		return li.findNearestNeighbors(val, l, middle-2)
 	}
+
+	x := middle + 1
+	if x == l {
+		return middle - 1, middle
+	}
+
 	return li.findNearestNeighbors(val, middle+1, r)
 }
