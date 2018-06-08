@@ -3,7 +3,7 @@ package linear
 import (
 	"fmt"
 
-	"github.com/DzananGanic/numericalgo/interpolate"
+	"github.com/teivah/numericalgo/interpolate"
 )
 
 // Linear provides the basic functionality for linear interpolation.

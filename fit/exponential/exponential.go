@@ -1,7 +1,7 @@
 package exponential
 
 import (
-	"github.com/DzananGanic/numericalgo"
+	"github.com/teivah/numericalgo"
 )
 
 // Exponential type fits two vectors x and y, finds the appropriate coefficients and predicts the value such that y=p*e^(q*x) is the best approximation of the given data in a sense of the least square error.

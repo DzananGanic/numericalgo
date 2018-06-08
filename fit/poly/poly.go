@@ -3,7 +3,7 @@ package poly
 import (
 	"math"
 
-	"github.com/DzananGanic/numericalgo"
+	"github.com/teivah/numericalgo"
 )
 
 // Poly type fits two vectors x and y, finds the appropriate coefficients and predicts the value such that y=p1+p2*x+p3*x^2+...+p(n+1)*x^n is the best approximation of the given data in a sense of the least square error.

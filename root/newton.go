@@ -1,6 +1,6 @@
 package root
 
-import "github.com/DzananGanic/numericalgo/differentiate"
+import "github.com/teivah/numericalgo/differentiate"
 
 // Newton receives three parameters. First parameter is the function we want to find root of. Second one is the initial guess (reasonably close to the true root). Third one is the number of iterations for the newton method. The Newton function returns the result as a float64, and the error.
 func Newton(f func(float64) float64, x0 float64, iter int) (float64, error) {

@@ -3,7 +3,7 @@ package lagrange
 import (
 	"fmt"
 
-	"github.com/DzananGanic/numericalgo/interpolate"
+	"github.com/teivah/numericalgo/interpolate"
 )
 
 // Lagrange provides the basic functionality for lagrange interpolation.

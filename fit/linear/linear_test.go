@@ -3,9 +3,9 @@ package linear_test
 import (
 	"testing"
 
-	"github.com/DzananGanic/numericalgo"
-	"github.com/DzananGanic/numericalgo/fit"
-	"github.com/DzananGanic/numericalgo/fit/linear"
+	"github.com/teivah/numericalgo"
+	"github.com/teivah/numericalgo/fit"
+	"github.com/teivah/numericalgo/fit/linear"
 	"github.com/stretchr/testify/assert"
 )
 

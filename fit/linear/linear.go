@@ -1,7 +1,7 @@
 package linear
 
 import (
-	"github.com/DzananGanic/numericalgo"
+	"github.com/teivah/numericalgo"
 )
 
 // Linear type fits two vectors x and y, finds the appropriate coefficients and predicts the value such that y=p+qx is the best approximation of the given data in a sense of the least square error.
