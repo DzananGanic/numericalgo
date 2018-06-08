@@ -21,7 +21,7 @@ func SortCoordinatePairs(cp []CoordinatePair) {
 func SlicesToCoordinatePairs(x, y []float64) []CoordinatePair {
 	cp := make([]CoordinatePair, len(x))
 	for i := 0; i < len(x); i++ {
-		cp = append(cp, CoordinatePair{X: x[i], Y: y[i]})
+		cp[i] = CoordinatePair{X: x[i], Y: y[i]}
 	}
 	return cp
 }
