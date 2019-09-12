@@ -65,7 +65,7 @@ valsToInterp := []float64{2.2, 5.1, 1.5}
 li := linear.New()
 li.Fit(x, y)
 
-estimate, err := interpolate.WithMulti(li, valToInterp)
+estimate, err := interpolate.WithMulti(li, valsToInterp)
 ([]float64{4.655714285714286, 3.1566666666666663, 3.802}, nil)
 ```
 
