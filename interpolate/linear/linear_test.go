@@ -59,6 +59,20 @@ func TestLinearCanInterpolateSingleValue(t *testing.T) {
 			expectedEstimate:   32.5,
 			expectedError:      nil,
 		},
+		"basic linear single-valued interpolation - first element": {
+			x:                  []float64{1100, 1200, 1230, 1260, 1280, 1300, 1320, 1340, 1380, 1440, 1590},
+			y:                  []float64{0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100},
+			valueToInterpolate: 1100,
+			expectedEstimate:   0,
+			expectedError:      nil,
+		},
+		"basic linear single-valued interpolation - last element": {
+			x:                  []float64{1100, 1200, 1230, 1260, 1280, 1300, 1320, 1340, 1380, 1440, 1590},
+			y:                  []float64{0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100},
+			valueToInterpolate: 1590,
+			expectedEstimate:   100,
+			expectedError:      nil,
+		},
 		"testing binary search for nearest neighbor - case where the interpolation value should be between indexes 0 and 1": {
 			x:                  []float64{1.3, 1.8, 2.5, 3.1, 3.8, 4.4, 4.9, 5.5, 6.2},
 			y:                  []float64{3.37, 4.45, 4.81, 3.96, 3.31, 2.72, 3.02, 3.43, 4.07},

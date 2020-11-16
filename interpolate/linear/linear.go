@@ -21,6 +21,16 @@ func New() *Linear {
 func (li *Linear) Interpolate(val float64) float64 {
 	var est float64
 
+	// early return if we are already at the boundaries
+	if val == li.XYPairs[0].X {
+		est = li.XYPairs[0].Y
+		return est
+	}
+	if val == li.XYPairs[len(li.XYPairs)-1].X {
+		est = li.XYPairs[len(li.XYPairs)-1].Y
+		return est
+	}
+
 	l, r := li.findNearestNeighbors(val, 0, len(li.XYPairs)-1)
 
 	lX := li.XYPairs[l].X
